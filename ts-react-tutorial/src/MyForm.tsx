@@ -12,13 +12,22 @@ function MyForm({ onSubmit }: MyFormProps) {
 
   const { name, description } = form;
 
-  const onChange = (e: any) => {
-    // e 값을 무엇으로 설정해야할까요?
-    // 일단 모를떄는 any 로 설정합니다.
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm({
+      ...form,
+      [name]: value
+    });
   };
 
-  const handleSubmit = (e: any) => {
-    // 여기도 모르니까 any 로 하겠습니다.
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    // onChange에 커서를 갖다대면 Type을 알수있다!
+    e.preventDefault();
+    onSubmit(form);
+    setForm({
+      name: '',
+      description: ''
+    }); // 초기화
   };
 
   return (
