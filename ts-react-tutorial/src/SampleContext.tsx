@@ -53,3 +53,35 @@ function reducer(state: State, action: Action): State {
       throw new Error('Unhandled action');
   }
 }
+
+// SampleProvider 에서 useReduer를 사용하고
+// SampleStateContext.Provider 와 SampleDispatchContext.Provider 로 children 을 감싸서 반환합니다.
+export function SampleProvider({ children }: { children: React.ReactNode }) {
+    const [state, dispatch] = useReducer(reducer, {
+      count: 0,
+      text: 'hello',
+      color: 'red',
+      isGood: true
+    });
+  
+    return (
+      <SampleStateContext.Provider value={state}>
+        <SampleDispatchContext.Provider value={dispatch}>
+          {children}
+        </SampleDispatchContext.Provider>
+      </SampleStateContext.Provider>
+    );
+  }
+  
+  // state 와 dispatch 를 쉽게 사용하기 위한 커스텀 Hooks
+  export function useSampleState() {
+    const state = useContext(SampleStateContext);
+    if (!state) throw new Error('Cannot find SampleProvider'); // 유효하지 않을땐 에러를 발생
+    return state;
+  }
+  
+  export function useSampleDispatch() {
+    const dispatch = useContext(SampleDispatchContext);
+    if (!dispatch) throw new Error('Cannot find SampleProvider'); // 유효하지 않을땐 에러를 발생
+    return dispatch;
+  }
